@@ -1,0 +1,6 @@
+{
+  "name": "Guia de Saúde - Sintomas e Medicamentos",
+  "description": "Aplicativo móvel Android simples e intuitivo para consulta e gestão de sintomas e medicamentos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

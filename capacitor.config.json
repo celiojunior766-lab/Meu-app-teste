@@ -1,0 +1,9 @@
+{
+  "appId": "com.guiasaude.app",
+  "appName": "Guia de Saúde",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "backgroundColor": "#020617"
+  }
+}
