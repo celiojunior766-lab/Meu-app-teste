@@ -4,23 +4,20 @@ import {
   Pill, 
   ChevronRight, 
   ArrowLeft, 
-  Smartphone, 
-  Maximize2, 
-  Wifi, 
-  Battery,
-  Plus,
-  Trash2,
-  X,
-  Search,
-  Pencil,
-  Check,
-  Download,
-  Upload,
-  AlertTriangle,
-  CheckCircle2,
-  FileText
+  Plus, 
+  Trash2, 
+  X, 
+  Search, 
+  Pencil, 
+  Check, 
+  Download, 
+  Upload, 
+  AlertTriangle, 
+  CheckCircle2, 
+  FileText 
 } from 'lucide-react';
-import { usePWAInstall } from './usePWAInstall';
+import { PWAInstallButton } from './PWAInstallButton';
+import { OfflineIndicator } from './OfflineIndicator';
 
 type Screen = 'home' | 'sintoma' | 'medicamento';
 
@@ -51,8 +48,6 @@ interface Sintoma {
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
-  const [deviceFrameMode, setDeviceFrameMode] = useState<boolean>(true);
-  const { isInstallable, isInstalled, install } = usePWAInstall();
 
   // Sintomas list and modal state - persists in localStorage
   const [sintomas, setSintomas] = useState<Sintoma[]>(() => {
@@ -625,70 +620,14 @@ export default function App() {
     setPendingImport(null);
   };
 
-  // Current system time for the Android status bar simulation
-  const currentTime = new Date().toLocaleTimeString('pt-BR', { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
-
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-0 md:p-6 select-none font-sans">
-      {/* Desktop view switcher (allows user to preview as Android phone or full layout) */}
-      <div className="hidden md:flex items-center gap-2 mb-4 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700/60 shadow-md">
-        <span className="text-xs font-medium text-slate-400">Modo de visualização:</span>
-        <button
-          onClick={() => setDeviceFrameMode(true)}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${
-            deviceFrameMode
-              ? 'bg-emerald-600 text-white shadow-sm'
-              : 'text-slate-300 hover:text-white'
-          }`}
-        >
-          <Smartphone className="w-3.5 h-3.5" />
-          Celular Android
-        </button>
-        <button
-          onClick={() => setDeviceFrameMode(false)}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${
-            !deviceFrameMode
-              ? 'bg-emerald-600 text-white shadow-sm'
-              : 'text-slate-300 hover:text-white'
-          }`}
-        >
-          <Maximize2 className="w-3.5 h-3.5" />
-          Tela Cheia
-        </button>
-      </div>
-
-      {/* Main container: either framed as an Android phone or responsive full width */}
-      <div 
-        className={`w-full transition-all duration-300 flex flex-col ${
-          deviceFrameMode 
-            ? 'max-w-[390px] h-[844px] max-h-[92vh] bg-slate-950 rounded-[44px] border-[10px] border-slate-800 shadow-2xl relative overflow-hidden' 
-            : 'max-w-xl min-h-[640px] bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl overflow-hidden'
-        }`}
-      >
-        {/* Android Status Bar */}
-        <div className="w-full bg-slate-950/90 text-slate-400 px-6 pt-3 pb-2 flex items-center justify-between text-xs tracking-wide shrink-0">
-          <div className="flex items-center gap-1.5 font-medium text-slate-200">
-            <span>{currentTime}</span>
-          </div>
-
-          {/* Android camera punch hole for realism when in frame mode */}
-          {deviceFrameMode && (
-            <div className="w-4 h-4 rounded-full bg-slate-900 border border-slate-800 shadow-inner"></div>
-          )}
-
-          <div className="flex items-center gap-2">
-            <Wifi className="w-3.5 h-3.5" />
-            <Battery className="w-4 h-4 text-emerald-400" />
-          </div>
-        </div>
-
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex justify-center font-sans">
+      {/* Mobile-first app container: fills entire phone screen on mobile, cleanly centered on wider screens */}
+      <div className="w-full max-w-lg min-h-screen bg-slate-900 flex flex-col relative shadow-2xl">
         {/* Dynamic App Screens */}
         <div className="flex-1 flex flex-col overflow-y-auto bg-slate-900">
           {currentScreen === 'home' && (
-            <div className="flex-1 flex flex-col px-6 py-6 justify-between animate-fadeIn">
+            <div className="flex-1 flex flex-col px-5 py-6 justify-between animate-fadeIn">
               {/* Header */}
               <div className="pt-8 pb-4 text-center">
                 <h1 className="text-xl font-semibold text-slate-100 tracking-tight">
@@ -739,6 +678,9 @@ export default function App() {
                     <ChevronRight className="w-5 h-5" />
                   </div>
                 </button>
+
+                {/* PWA Install Button (appears seamlessly when installable or provides iOS guide) */}
+                <PWAInstallButton />
 
                 {/* Backup & Transferência (EXPORTAR e IMPORTAR) */}
                 <div className="pt-2">
@@ -2083,17 +2025,8 @@ export default function App() {
           </div>
         )}
 
-        {/* Android Home Navigation Bar */}
-        <div className="w-full bg-slate-950 py-3 flex items-center justify-center shrink-0">
-          <div 
-            onClick={() => {
-              setSelectedMedicamentoId(null);
-              setCurrentScreen('home');
-            }}
-            className="w-32 h-1 bg-slate-600 hover:bg-slate-400 rounded-full cursor-pointer transition-colors"
-            title="Ir para tela inicial"
-          ></div>
-        </div>
+        {/* Offline connectivity banner */}
+        <OfflineIndicator />
       </div>
     </div>
   );
