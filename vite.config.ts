@@ -21,8 +21,8 @@ export default defineConfig(() => {
           theme_color: '#0f172a',
           background_color: '#020617',
           display: 'standalone',
-          start_url: '/',
-          scope: '/',
+          start_url: '/Meu-app-teste/',
+          scope: '/Meu-app-teste/',
           icons: [
             {
               src: '/pwa-192x192.png',
